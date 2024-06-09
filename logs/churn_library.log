@@ -1,0 +1,8 @@
+2024-06-09 22:18:27,986:INFO:root:Logging is configured. Log file: /Users/ahmedzidane/Documents/machine_learning_devops_udacity_nanodegree/predict_customer_churn_with_clean_code/logs/churn_library.log
+2024-06-09 22:18:27,986:INFO:root:Importing data from path: data/bank_data.csv
+2024-06-09 22:18:28,001:INFO:root:Encoding categorical features
+2024-06-09 22:18:28,005:INFO:root:Performing EDA
+2024-06-09 22:18:28,952:INFO:root:Performing feature engineering
+2024-06-09 22:18:28,953:INFO:root:Training models
+2024-06-09 22:21:05,269:INFO:root:Generating classification report images
+2024-06-09 22:21:05,353:INFO:root:Generating feature importance plot

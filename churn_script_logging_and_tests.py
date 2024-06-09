@@ -1,29 +1,64 @@
-#!/Users/ahmedzidane/anaconda3/envs/udacity/bin/python
-
 import os
+import sys
 import logging
 import pytest
 import pandas as pd
 
+# Add the project root directory to sys.path
+sys.path.insert(
+    0,
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            '..')))
+
+# Debugging step: Print current sys.path
+print("Current sys.path:", sys.path)
+logging.basicConfig(
+    level=logging.INFO,  # Change to DEBUG to capture all messages
+    format='%(asctime)s:%(levelname)s:%(name)s:%(message)s'
+)
+logger = logging.getLogger()
+logger.info("Current sys.path: %s", sys.path)
+
 try:
     from churn_library import ChurnPredictor
+    # Debugging step: Log successful import
+    print("Successfully imported ChurnPredictor.")
+    logger.info("Successfully imported ChurnPredictor.")
 except ImportError as e:
-    logging.error("Error importing churn_library or dependencies: %s", e)
+    logger.error("Error importing churn_library or dependencies: %s", e)
     ChurnPredictor = None
     raise
 
 # Configure logging
-log_directory = os.path.expanduser('~/logs')
+current_dir = os.path.dirname(os.path.abspath(__file__))
+log_directory = os.path.join(current_dir, 'logs')
 os.makedirs(log_directory, exist_ok=True)
-logging.basicConfig(
-    filename=os.path.join(log_directory, 'churn_script.log'),
-    level=logging.INFO,
-    format='%(asctime)s:%(levelname)s:%(name)s:%(message)s'
-)
-logger = logging.getLogger()
+log_file = os.path.join(log_directory, 'churn_script.log')
+
+# Debugging step: Print log file path
+print("Log file path:", log_file)
+
+if not os.path.exists(log_file):
+    with open(log_file, 'w'):
+        pass
+
+# Add a file handler to the logger
+file_handler = logging.FileHandler(log_file)
+formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
+# Adding a print statement to confirm logging is configured
+print("Logging is configured. Log file: ", log_file)
+logger.info("Logging is configured. Log file: %s", log_file)
 
 # Unit tests using pytest
+
+
 def test_import_data():
+    logger.debug("Starting test_import_data")
     churn_predictor = ChurnPredictor()
     try:
         df = churn_predictor.import_data('data/bank_data.csv')
@@ -35,10 +70,13 @@ def test_import_data():
         logger.error(e)
         raise e
 
+
 def test_perform_eda():
+    logger.debug("Starting test_perform_eda")
     churn_predictor = ChurnPredictor()
     df = churn_predictor.import_data('data/bank_data.csv')
-    df['Churn'] = df['Attrition_Flag'].apply(lambda val: 0 if val == "Existing Customer" else 1)
+    df['Churn'] = df['Attrition_Flag'].apply(
+        lambda val: 0 if val == "Existing Customer" else 1)
     try:
         churn_predictor.perform_eda(df)
         assert os.path.exists('images/eda/churn_distribution.png')
@@ -52,11 +90,19 @@ def test_perform_eda():
         logger.error(e)
         raise e
 
+
 def test_encoder_helper():
+    logger.debug("Starting test_encoder_helper")
     churn_predictor = ChurnPredictor()
     df = churn_predictor.import_data('data/bank_data.csv')
-    df['Churn'] = df['Attrition_Flag'].apply(lambda val: 0 if val == "Existing Customer" else 1)
-    category_lst = ['Gender', 'Education_Level', 'Marital_Status', 'Income_Category', 'Card_Category']
+    df['Churn'] = df['Attrition_Flag'].apply(
+        lambda val: 0 if val == "Existing Customer" else 1)
+    category_lst = [
+        'Gender',
+        'Education_Level',
+        'Marital_Status',
+        'Income_Category',
+        'Card_Category']
     try:
         df_encoded = churn_predictor.encoder_helper(df, category_lst)
         for category in category_lst:
@@ -67,12 +113,17 @@ def test_encoder_helper():
         logger.error(e)
         raise e
 
+
 def test_perform_feature_engineering():
+    logger.debug("Starting test_perform_feature_engineering")
     churn_predictor = ChurnPredictor()
     df = churn_predictor.import_data('data/bank_data.csv')
-    df['Churn'] = df['Attrition_Flag'].apply(lambda val: 0 if val == "Existing Customer" else 1)
+    df['Churn'] = df['Attrition_Flag'].apply(
+        lambda val: 0 if val == "Existing Customer" else 1)
     try:
-        X_train, X_test, y_train, y_test = churn_predictor.perform_feature_engineering(df, 'Churn')
+        X_train, X_test, y_train, y_test = churn_predictor.perform_feature_engineering(
+            df, 'Churn')
+        print(X_train.dtypes)
         assert X_train.shape[0] == y_train.shape[0]
         assert X_test.shape[0] == y_test.shape[0]
         logger.info("test_perform_feature_engineering: SUCCESS")
@@ -81,12 +132,22 @@ def test_perform_feature_engineering():
         logger.error(e)
         raise e
 
+
 def test_train_models():
+    logger.debug("Starting test_train_models")
     churn_predictor = ChurnPredictor()
     df = churn_predictor.import_data('data/bank_data.csv')
-    df['Churn'] = df['Attrition_Flag'].apply(lambda val: 0 if val == "Existing Customer" else 1)
-    df = churn_predictor.encoder_helper(df, ['Gender', 'Education_Level', 'Marital_Status', 'Income_Category', 'Card_Category'])
-    X_train, X_test, y_train, y_test = churn_predictor.perform_feature_engineering(df, 'Churn')
+    df['Churn'] = df['Attrition_Flag'].apply(
+        lambda val: 0 if val == "Existing Customer" else 1)
+    df = churn_predictor.encoder_helper(df,
+                                        ['Gender',
+                                         'Education_Level',
+                                         'Marital_Status',
+                                         'Income_Category',
+                                         'Card_Category'])
+    X_train, X_test, y_train, y_test = churn_predictor.perform_feature_engineering(
+        df, 'Churn')
+    print(X_train.dtypes)
     param_grid = {
         'n_estimators': [200, 500],
         'max_features': ['sqrt', 'log2'],
@@ -94,7 +155,14 @@ def test_train_models():
         'criterion': ['gini', 'entropy']
     }
     try:
-        churn_predictor.train_models(X_train, X_test, y_train, y_test, param_grid=param_grid, cv=5, max_iter=3000)
+        churn_predictor.train_models(
+            X_train,
+            X_test,
+            y_train,
+            y_test,
+            param_grid=param_grid,
+            cv=5,
+            max_iter=3000)
         assert os.path.exists('models/rfc_model.pkl')
         assert os.path.exists('models/logistic_model.pkl')
         logger.info("test_train_models: SUCCESS")
@@ -103,5 +171,8 @@ def test_train_models():
         logger.error(e)
         raise e
 
+
 if __name__ == "__main__":
+    print("Running pytest")
+    logger.info("Running pytest")
     pytest.main(["-v", __file__])

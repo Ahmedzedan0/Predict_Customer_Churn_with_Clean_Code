@@ -1,0 +1,42 @@
+2024-06-09 22:53:31,926:INFO:root:Logging is configured. Log file: /Users/ahmedzidane/Documents/machine_learning_devops_udacity_nanodegree/predict_customer_churn_with_clean_code/logs/churn_script.log
+2024-06-09 22:53:31,926:INFO:root:Running pytest
+2024-06-09 22:53:31,963:INFO:root:Current sys.path: ['/Users/ahmedzidane/Documents/machine_learning_devops_udacity_nanodegree', '/Users/ahmedzidane/Documents/machine_learning_devops_udacity_nanodegree', '/Users/ahmedzidane/Documents/machine_learning_devops_udacity_nanodegree/predict_customer_churn_with_clean_code', '/Users/ahmedzidane/Documents/machine_learning_devops_udacity_nanodegree/Predict_Customer_Churn_with_Clean_Code', '/Users/ahmedzidane/anaconda3/envs/udacity/lib/python310.zip', '/Users/ahmedzidane/anaconda3/envs/udacity/lib/python3.10', '/Users/ahmedzidane/anaconda3/envs/udacity/lib/python3.10/lib-dynload', '/Users/ahmedzidane/anaconda3/envs/udacity/lib/python3.10/site-packages']
+2024-06-09 22:53:31,964:INFO:root:Successfully imported ChurnPredictor.
+2024-06-09 22:53:31,964:INFO:root:Logging is configured. Log file: /Users/ahmedzidane/Documents/machine_learning_devops_udacity_nanodegree/predict_customer_churn_with_clean_code/logs/churn_script.log
+2024-06-09 22:53:31,964:INFO:root:Logging is configured. Log file: /Users/ahmedzidane/Documents/machine_learning_devops_udacity_nanodegree/predict_customer_churn_with_clean_code/logs/churn_script.log
+2024-06-09 22:53:31,965:INFO:root:Importing data from path: data/bank_data.csv
+2024-06-09 22:53:31,965:INFO:root:Importing data from path: data/bank_data.csv
+2024-06-09 22:53:31,978:INFO:root:test_import_data: SUCCESS
+2024-06-09 22:53:31,978:INFO:root:test_import_data: SUCCESS
+2024-06-09 22:53:31,979:INFO:root:Importing data from path: data/bank_data.csv
+2024-06-09 22:53:31,979:INFO:root:Importing data from path: data/bank_data.csv
+2024-06-09 22:53:31,995:INFO:root:Performing EDA
+2024-06-09 22:53:31,995:INFO:root:Performing EDA
+2024-06-09 22:53:32,911:INFO:root:test_perform_eda: SUCCESS
+2024-06-09 22:53:32,911:INFO:root:test_perform_eda: SUCCESS
+2024-06-09 22:53:32,912:INFO:root:Importing data from path: data/bank_data.csv
+2024-06-09 22:53:32,912:INFO:root:Importing data from path: data/bank_data.csv
+2024-06-09 22:53:32,925:INFO:root:Encoding categorical features
+2024-06-09 22:53:32,925:INFO:root:Encoding categorical features
+2024-06-09 22:53:32,929:INFO:root:test_encoder_helper: SUCCESS
+2024-06-09 22:53:32,929:INFO:root:test_encoder_helper: SUCCESS
+2024-06-09 22:53:32,929:INFO:root:Importing data from path: data/bank_data.csv
+2024-06-09 22:53:32,929:INFO:root:Importing data from path: data/bank_data.csv
+2024-06-09 22:53:32,942:INFO:root:Performing feature engineering
+2024-06-09 22:53:32,942:INFO:root:Performing feature engineering
+2024-06-09 22:53:32,948:INFO:root:test_perform_feature_engineering: SUCCESS
+2024-06-09 22:53:32,948:INFO:root:test_perform_feature_engineering: SUCCESS
+2024-06-09 22:53:32,949:INFO:root:Importing data from path: data/bank_data.csv
+2024-06-09 22:53:32,949:INFO:root:Importing data from path: data/bank_data.csv
+2024-06-09 22:53:32,966:INFO:root:Encoding categorical features
+2024-06-09 22:53:32,966:INFO:root:Encoding categorical features
+2024-06-09 22:53:32,973:INFO:root:Performing feature engineering
+2024-06-09 22:53:32,973:INFO:root:Performing feature engineering
+2024-06-09 22:53:32,980:INFO:root:Training models
+2024-06-09 22:53:32,980:INFO:root:Training models
+2024-06-09 22:55:01,218:INFO:root:Generating classification report images
+2024-06-09 22:55:01,218:INFO:root:Generating classification report images
+2024-06-09 22:55:01,300:INFO:root:Generating feature importance plot
+2024-06-09 22:55:01,300:INFO:root:Generating feature importance plot
+2024-06-09 22:55:02,031:INFO:root:test_train_models: SUCCESS
+2024-06-09 22:55:02,031:INFO:root:test_train_models: SUCCESS

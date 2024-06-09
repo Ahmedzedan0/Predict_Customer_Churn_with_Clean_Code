@@ -1,17 +1,3 @@
-"""
-This module contains functions for predicting customer churn.
-
-The functions include:
-- import_data: to import data from a CSV file.
-- perform_eda: to perform exploratory data analysis and save figures.
-- encoder_helper: to encode categorical features.
-- perform_feature_engineering: to perform feature engineering.
-- classification_report_image: to produce and save classification reports.
-- feature_importance_plot: to create and save feature importance plots.
-- train_models: to train machine learning models and store results.
-
-"""
-
 import os
 import shap
 import joblib
@@ -27,12 +13,26 @@ from tqdm import tqdm
 import logging
 
 # Configure logging
+current_dir = os.path.dirname(os.path.abspath(__file__))
+log_directory = os.path.join(current_dir, 'logs')
+os.makedirs(log_directory, exist_ok=True)
+log_file = os.path.join(log_directory, 'churn_library.log')
+
+if not os.path.exists(log_file):
+    with open(log_file, 'w'):
+        pass
+
 logging.basicConfig(
-    filename=os.path.expanduser('~/logs/churn_library.log'),
+    filename=log_file,
     level=logging.INFO,
     format='%(asctime)s:%(levelname)s:%(name)s:%(message)s'
 )
 logger = logging.getLogger()
+
+# Adding a print statement to confirm logging is configured
+print("Logging is configured. Log file: ", log_file)
+logger.info("Logging is configured. Log file: %s", log_file)
+
 
 class ChurnPredictor:
     def __init__(self) -> None:
@@ -46,7 +46,8 @@ class ChurnPredictor:
     @staticmethod
     def perform_eda(df: pd.DataFrame) -> None:
         logger.info("Performing EDA")
-        df['Churn'] = df['Attrition_Flag'].apply(lambda val: 0 if val == "Existing Customer" else 1)
+        df['Churn'] = df['Attrition_Flag'].apply(
+            lambda val: 0 if val == "Existing Customer" else 1)
         os.makedirs('images/eda', exist_ok=True)
 
         plt.figure(figsize=(20, 10))
@@ -82,17 +83,27 @@ class ChurnPredictor:
         plt.close()
 
         plt.figure(figsize=(20, 10))
-        sns.heatmap(df.select_dtypes(include=[np.number]).corr(), annot=False, cmap='Dark2_r', linewidths=2)
+        sns.heatmap(
+            df.select_dtypes(
+                include=[
+                    np.number]).corr(),
+            annot=False,
+            cmap='Dark2_r',
+            linewidths=2)
         plt.title('Correlation Heatmap')
         plt.savefig('images/eda/correlation_heatmap.png')
         plt.close()
 
     @staticmethod
-    def encoder_helper(df: pd.DataFrame, category_lst: list, response: str = 'Churn') -> pd.DataFrame:
+    def encoder_helper(
+            df: pd.DataFrame,
+            category_lst: list,
+            response: str = 'Churn') -> pd.DataFrame:
         logger.info("Encoding categorical features")
         if not pd.api.types.is_numeric_dtype(df[response]):
             logger.error("The response column '%s' must be numeric.", response)
-            raise ValueError(f"The response column '{response}' must be numeric.")
+            raise ValueError(
+                f"The response column '{response}' must be numeric.")
 
         for category in category_lst:
             new_column_name = f"{category}_{response}"
@@ -106,25 +117,54 @@ class ChurnPredictor:
         logger.info("Performing feature engineering")
         X = df.drop(columns=[response])
         y = df[response]
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+        # Ensure all categorical variables are one-hot encoded
+        X = pd.get_dummies(X)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.3, random_state=42)
         return X_train, X_test, y_train, y_test
 
     @staticmethod
-    def classification_report_image(y_train, y_test, y_train_preds_lr, y_train_preds_rf, y_test_preds_lr, y_test_preds_rf):
+    def classification_report_image(
+            y_train,
+            y_test,
+            y_train_preds_lr,
+            y_train_preds_rf,
+            y_test_preds_lr,
+            y_test_preds_rf):
         logger.info("Generating classification report images")
         os.makedirs('images/results', exist_ok=True)
 
         plt.figure(figsize=(10, 5))
-        plt.text(0.01, 1.25, str('Logistic Regression Train'), {'fontsize': 10}, fontproperties='monospace')
-        plt.text(0.01, 0.05, str(classification_report(y_train, y_train_preds_lr)), {'fontsize': 10}, fontproperties='monospace')
-        plt.text(0.01, 0.6, str('Logistic Regression Test'), {'fontsize': 10}, fontproperties='monospace')
-        plt.text(0.01, 0.7, str(classification_report(y_test, y_test_preds_lr)), {'fontsize': 10}, fontproperties='monospace')
+        plt.text(0.01, 1.25, str('Logistic Regression Train'),
+                 {'fontsize': 10}, fontproperties='monospace')
+        plt.text(
+            0.01, 0.05, str(
+                classification_report(
+                    y_train, y_train_preds_lr)), {
+                'fontsize': 10}, fontproperties='monospace')
+        plt.text(0.01, 0.6, str('Logistic Regression Test'), {
+                 'fontsize': 10}, fontproperties='monospace')
+        plt.text(
+            0.01, 0.7, str(
+                classification_report(
+                    y_test, y_test_preds_lr)), {
+                'fontsize': 10}, fontproperties='monospace')
 
-        plt.text(0.5, 1.25, str('Random Forest Train'), {'fontsize': 10}, fontproperties='monospace')
-        plt.text(0.5, 0.05, str(classification_report(y_train, y_train_preds_rf)), {'fontsize': 10}, fontproperties='monospace')
-        plt.text(0.5, 0.6, str('Random Forest Test'), {'fontsize': 10}, fontproperties='monospace')
-        plt.text(0.5, 0.7, str(classification_report(y_test, y_test_preds_rf)), {'fontsize': 10}, fontproperties='monospace')
-        
+        plt.text(0.5, 1.25, str('Random Forest Train'), {
+                 'fontsize': 10}, fontproperties='monospace')
+        plt.text(
+            0.5, 0.05, str(
+                classification_report(
+                    y_train, y_train_preds_rf)), {
+                'fontsize': 10}, fontproperties='monospace')
+        plt.text(0.5, 0.6, str('Random Forest Test'), {
+                 'fontsize': 10}, fontproperties='monospace')
+        plt.text(
+            0.5, 0.7, str(
+                classification_report(
+                    y_test, y_test_preds_rf)), {
+                'fontsize': 10}, fontproperties='monospace')
+
         plt.axis('off')
         plt.savefig('images/results/classification_report.png')
         plt.close()
@@ -145,7 +185,15 @@ class ChurnPredictor:
         plt.savefig(f"{output_pth}/feature_importance.png")
         plt.close()
 
-    def train_models(self, X_train, X_test, y_train, y_test, param_grid=None, cv=5, max_iter=3000):
+    def train_models(
+            self,
+            X_train,
+            X_test,
+            y_train,
+            y_test,
+            param_grid=None,
+            cv=5,
+            max_iter=3000):
         logger.info("Training models")
         os.makedirs('models', exist_ok=True)
 
@@ -160,15 +208,20 @@ class ChurnPredictor:
         rfc = RandomForestClassifier(random_state=42)
         lrc = LogisticRegression(solver='lbfgs', max_iter=max_iter)
 
-        cv_rfc = GridSearchCV(estimator=rfc, param_grid=param_grid, cv=cv, verbose=3)
+        cv_rfc = GridSearchCV(
+            estimator=rfc,
+            param_grid=param_grid,
+            cv=cv,
+            verbose=3)
 
         print("Training Random Forest...")
-        n_iter = len(param_grid['n_estimators']) * len(param_grid['max_features']) * len(param_grid['max_depth']) * len(param_grid['criterion']) * cv
+        n_iter = len(param_grid['n_estimators']) * len(param_grid['max_features']) * \
+            len(param_grid['max_depth']) * len(param_grid['criterion']) * cv
 
         with tqdm(total=n_iter, desc="Training Random Forest") as pbar:
             cv_rfc.fit(X_train, y_train)
             pbar.update(n_iter)
-        
+
         print("Training Logistic Regression...")
         lrc.fit(X_train, y_train)
 
@@ -182,16 +235,22 @@ class ChurnPredictor:
 
         plt.figure(figsize=(15, 8))
         ax = plt.gca()
-        RocCurveDisplay.from_estimator(cv_rfc, X_test, y_test, ax=ax, alpha=0.8)
+        RocCurveDisplay.from_estimator(
+            cv_rfc, X_test, y_test, ax=ax, alpha=0.8)
         RocCurveDisplay.from_estimator(lrc, X_test, y_test, ax=ax, alpha=0.8)
         plt.savefig('images/results/roc_curve.png')
         plt.close()
 
         self.classification_report_image(
-            y_train, y_test, y_train_preds_lr, y_train_preds_rf, y_test_preds_lr, y_test_preds_rf
-        )
+            y_train,
+            y_test,
+            y_train_preds_lr,
+            y_train_preds_rf,
+            y_test_preds_lr,
+            y_test_preds_rf)
 
-        self.feature_importance_plot(cv_rfc.best_estimator_, X_train, 'images/results')
+        self.feature_importance_plot(
+            cv_rfc.best_estimator_, X_train, 'images/results')
 
         explainer = shap.TreeExplainer(cv_rfc.best_estimator_)
         shap_values = explainer.shap_values(X_test)
@@ -205,23 +264,23 @@ cat_columns = [
     'Education_Level',
     'Marital_Status',
     'Income_Category',
-    'Card_Category'                
+    'Card_Category'
 ]
 
 quant_columns = [
     'Customer_Age',
-    'Dependent_count', 
+    'Dependent_count',
     'Months_on_book',
-    'Total_Relationship_Count', 
+    'Total_Relationship_Count',
     'Months_Inactive_12_mon',
-    'Contacts_Count_12_mon', 
-    'Credit_Limit', 
+    'Contacts_Count_12_mon',
+    'Credit_Limit',
     'Total_Revolving_Bal',
-    'Avg_Open_To_Buy', 
-    'Total_Amt_Chng_Q4_Q1', 
+    'Avg_Open_To_Buy',
+    'Total_Amt_Chng_Q4_Q1',
     'Total_Trans_Amt',
-    'Total_Trans_Ct', 
-    'Total_Ct_Chng_Q4_Q1', 
+    'Total_Trans_Ct',
+    'Total_Ct_Chng_Q4_Q1',
     'Avg_Utilization_Ratio'
 ]
 
@@ -230,14 +289,15 @@ keep_cols = ['Customer_Age', 'Dependent_count', 'Months_on_book',
              'Contacts_Count_12_mon', 'Credit_Limit', 'Total_Revolving_Bal',
              'Avg_Open_To_Buy', 'Total_Amt_Chng_Q4_Q1', 'Total_Trans_Amt',
              'Total_Trans_Ct', 'Total_Ct_Chng_Q4_Q1', 'Avg_Utilization_Ratio',
-             'Gender_Churn', 'Education_Level_Churn', 'Marital_Status_Churn', 
+             'Gender_Churn', 'Education_Level_Churn', 'Marital_Status_Churn',
              'Income_Category_Churn', 'Card_Category_Churn']
 
 
 def main():
     churn_predictor = ChurnPredictor()
     df = churn_predictor.import_data('data/bank_data.csv')
-    df['Churn'] = df['Attrition_Flag'].apply(lambda val: 0 if val == "Existing Customer" else 1)
+    df['Churn'] = df['Attrition_Flag'].apply(
+        lambda val: 0 if val == "Existing Customer" else 1)
     df = churn_predictor.encoder_helper(df, cat_columns, 'Churn')
     churn_predictor.perform_eda(df)
 
@@ -247,7 +307,8 @@ def main():
     X = df[keep_cols]
     y = df['Churn']
 
-    X_train, X_test, y_train, y_test = churn_predictor.perform_feature_engineering(df, 'Churn')
+    X_train, X_test, y_train, y_test = churn_predictor.perform_feature_engineering(
+        df, 'Churn')
 
     param_grid = {
         'n_estimators': [200, 500],
@@ -258,7 +319,14 @@ def main():
     cv = 5
     max_iter = 3000
 
-    churn_predictor.train_models(X_train, X_test, y_train, y_test, param_grid=param_grid, cv=cv, max_iter=max_iter)
+    churn_predictor.train_models(
+        X_train,
+        X_test,
+        y_train,
+        y_test,
+        param_grid=param_grid,
+        cv=cv,
+        max_iter=max_iter)
 
 
 if __name__ == '__main__':

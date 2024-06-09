@@ -13,11 +13,17 @@
     └── Guide.ipynb
     └── README.md
     └── 📁__pycache__
+        └── churn_library.cpython-310.pyc
         └── churn_library.cpython-311.pyc
+        └── churn_script_logging_and_tests.cpython-310-pytest-8.2.2.pyc
         └── churn_script_logging_and_tests.cpython-311-pytest-8.2.2.pyc
+        └── conftest.cpython-310-pytest-8.2.2.pyc
+        └── conftest.cpython-311-pytest-8.2.2.pyc
+        └── test_churn_library.cpython-311-pytest-8.2.2.pyc
     └── churn_library.py
     └── churn_notebook.ipynb
     └── churn_script_logging_and_tests.py
+    └── conftest.py
     └── 📁data
         └── bank_data.csv
     └── 📁images
@@ -28,8 +34,16 @@
             └── marital_status_distribution.png
             └── total_transactions_distribution.png
         └── 📁results
-        └── sequencediagram.jpeg
+            └── classification_report.png
+            └── feature_importance.png
+            └── roc_curve.png
+            └── shap_summary.png
     └── 📁logs
+        └── churn_library.log
+        └── churn_script.log
     └── 📁models
+        └── logistic_model.pkl
+        └── rfc_model.pkl
     └── requirements_py3.10.txt
+    └── sequencediagram.jpeg
 ```
