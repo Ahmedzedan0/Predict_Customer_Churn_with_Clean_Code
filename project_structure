@@ -1,0 +1,35 @@
+```
+└── 📁Predict_Customer_Churn_with_Clean_Code
+    └── .DS_Store
+    └── 📁.pytest_cache
+        └── .gitignore
+        └── CACHEDIR.TAG
+        └── README.md
+        └── 📁v
+            └── 📁cache
+                └── lastfailed
+                └── nodeids
+                └── stepwise
+    └── Guide.ipynb
+    └── README.md
+    └── 📁__pycache__
+        └── churn_library.cpython-311.pyc
+        └── churn_script_logging_and_tests.cpython-311-pytest-8.2.2.pyc
+    └── churn_library.py
+    └── churn_notebook.ipynb
+    └── churn_script_logging_and_tests.py
+    └── 📁data
+        └── bank_data.csv
+    └── 📁images
+        └── 📁eda
+            └── churn_distribution.png
+            └── correlation_heatmap.png
+            └── customer_age_distribution.png
+            └── marital_status_distribution.png
+            └── total_transactions_distribution.png
+        └── 📁results
+        └── sequencediagram.jpeg
+    └── 📁logs
+    └── 📁models
+    └── requirements_py3.10.txt
+```
