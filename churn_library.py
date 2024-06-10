@@ -251,8 +251,8 @@ class ChurnPredictor:
         plt.savefig(f"{output_pth}/feature_importance.png")
         plt.close()
 
+    @staticmethod
     def train_models(
-            self,
             X_train,
             X_test,
             y_train,
@@ -319,7 +319,7 @@ class ChurnPredictor:
         plt.savefig('images/results/roc_curve.png')
         plt.close()
 
-        self.classification_report_image(
+        ChurnPredictor.classification_report_image(
             y_train,
             y_test,
             y_train_preds_lr,
@@ -327,7 +327,7 @@ class ChurnPredictor:
             y_test_preds_lr,
             y_test_preds_rf)
 
-        self.feature_importance_plot(
+        ChurnPredictor.feature_importance_plot(
             cv_rfc.best_estimator_, X_train, 'images/results')
 
         explainer = shap.TreeExplainer(cv_rfc.best_estimator_)
@@ -397,7 +397,7 @@ def main():
     cv = 5
     max_iter = 3000
 
-    churn_predictor.train_models(
+    ChurnPredictor.train_models(
         X_train,
         X_test,
         y_train,
