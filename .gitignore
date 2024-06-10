@@ -1,5 +1,5 @@
-# remove notebooks
-*.ipynb
+# Jupyter Notebook
+.ipynb_checkpoints
 notebooks/
 
 # Byte-compiled / optimized / DLL files
