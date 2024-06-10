@@ -1,3 +1,14 @@
+"""
+churn_library.py
+
+This script contains the ChurnPredictor class which includes methods for importing data, 
+performing exploratory data analysis (EDA), encoding categorical features, performing feature 
+engineering, training models, and generating various plots and reports.
+
+Author: Ahmed Zidane
+Date Created: 2024-06-10
+"""
+
 import os
 import shap
 import joblib
@@ -40,11 +51,26 @@ class ChurnPredictor:
 
     @staticmethod
     def import_data(pth: str) -> pd.DataFrame:
+        """
+        Import data from a CSV file.
+
+        Parameters:
+        pth (str): The path to the CSV file.
+
+        Returns:
+        pd.DataFrame: The imported data as a DataFrame.
+        """
         logger.info("Importing data from path: %s", pth)
         return pd.read_csv(pth)
 
     @staticmethod
     def perform_eda(df: pd.DataFrame) -> None:
+        """
+        Perform exploratory data analysis (EDA) on the dataframe.
+
+        Parameters:
+        df (pd.DataFrame): The dataframe on which EDA is performed.
+        """
         logger.info("Performing EDA")
         df['Churn'] = df['Attrition_Flag'].apply(
             lambda val: 0 if val == "Existing Customer" else 1)
@@ -99,6 +125,17 @@ class ChurnPredictor:
             df: pd.DataFrame,
             category_lst: list,
             response: str = 'Churn') -> pd.DataFrame:
+        """
+        Encode categorical features.
+
+        Parameters:
+        df (pd.DataFrame): The dataframe containing the features.
+        category_lst (list): List of columns that contain categorical features.
+        response (str): The response column name.
+
+        Returns:
+        pd.DataFrame: The dataframe with encoded features.
+        """
         logger.info("Encoding categorical features")
         if not pd.api.types.is_numeric_dtype(df[response]):
             logger.error("The response column '%s' must be numeric.", response)
@@ -114,6 +151,16 @@ class ChurnPredictor:
 
     @staticmethod
     def perform_feature_engineering(df: pd.DataFrame, response: str):
+        """
+        Perform feature engineering.
+
+        Parameters:
+        df (pd.DataFrame): The dataframe containing the features.
+        response (str): The response column name.
+
+        Returns:
+        tuple: Split data (X_train, X_test, y_train, y_test).
+        """
         logger.info("Performing feature engineering")
         X = df.drop(columns=[response])
         y = df[response]
@@ -131,6 +178,17 @@ class ChurnPredictor:
             y_train_preds_rf,
             y_test_preds_lr,
             y_test_preds_rf):
+        """
+        Generate and save classification report images.
+
+        Parameters:
+        y_train (array): Training labels.
+        y_test (array): Test labels.
+        y_train_preds_lr (array): Logistic Regression predictions for training set.
+        y_train_preds_rf (array): Random Forest predictions for training set.
+        y_test_preds_lr (array): Logistic Regression predictions for test set.
+        y_test_preds_rf (array): Random Forest predictions for test set.
+        """
         logger.info("Generating classification report images")
         os.makedirs('images/results', exist_ok=True)
 
@@ -171,6 +229,14 @@ class ChurnPredictor:
 
     @staticmethod
     def feature_importance_plot(model, X_data, output_pth):
+        """
+        Generate and save feature importance plot.
+
+        Parameters:
+        model: The trained model.
+        X_data (pd.DataFrame): The feature data.
+        output_pth (str): The output path to save the plot.
+        """
         logger.info("Generating feature importance plot")
         os.makedirs(output_pth, exist_ok=True)
 
@@ -194,6 +260,18 @@ class ChurnPredictor:
             param_grid=None,
             cv=5,
             max_iter=3000):
+        """
+        Train models and generate evaluation plots and reports.
+
+        Parameters:
+        X_train (pd.DataFrame): Training features.
+        X_test (pd.DataFrame): Test features.
+        y_train (pd.Series): Training labels.
+        y_test (pd.Series): Test labels.
+        param_grid (dict): Parameter grid for GridSearchCV.
+        cv (int): Number of cross-validation folds.
+        max_iter (int): Maximum iterations for logistic regression.
+        """
         logger.info("Training models")
         os.makedirs('models', exist_ok=True)
 

@@ -1,3 +1,14 @@
+"""
+churn_script_logging_and_tests.py
+
+This script contains logging configuration and unit tests for the ChurnPredictor class 
+from the churn_library module. The purpose of the script is to ensure that the functions 
+in the ChurnPredictor class work as expected.
+
+Author: Ahmed Zidane
+Date Created: 2024-06-10
+"""
+
 import os
 import sys
 import logging
@@ -58,6 +69,9 @@ logger.info("Logging is configured. Log file: %s", log_file)
 
 
 def test_import_data():
+    """
+    Test the import_data function from ChurnPredictor class.
+    """
     logger.debug("Starting test_import_data")
     churn_predictor = ChurnPredictor()
     try:
@@ -72,6 +86,9 @@ def test_import_data():
 
 
 def test_perform_eda():
+    """
+    Test the perform_eda function from ChurnPredictor class.
+    """
     logger.debug("Starting test_perform_eda")
     churn_predictor = ChurnPredictor()
     df = churn_predictor.import_data('data/bank_data.csv')
@@ -92,6 +109,9 @@ def test_perform_eda():
 
 
 def test_encoder_helper():
+    """
+    Test the encoder_helper function from ChurnPredictor class.
+    """
     logger.debug("Starting test_encoder_helper")
     churn_predictor = ChurnPredictor()
     df = churn_predictor.import_data('data/bank_data.csv')
@@ -115,6 +135,9 @@ def test_encoder_helper():
 
 
 def test_perform_feature_engineering():
+    """
+    Test the perform_feature_engineering function from ChurnPredictor class.
+    """
     logger.debug("Starting test_perform_feature_engineering")
     churn_predictor = ChurnPredictor()
     df = churn_predictor.import_data('data/bank_data.csv')
@@ -134,6 +157,9 @@ def test_perform_feature_engineering():
 
 
 def test_train_models():
+    """
+    Test the train_models function from ChurnPredictor class.
+    """
     logger.debug("Starting test_train_models")
     churn_predictor = ChurnPredictor()
     df = churn_predictor.import_data('data/bank_data.csv')
